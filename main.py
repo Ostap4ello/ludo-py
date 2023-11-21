@@ -40,4 +40,4 @@ def tlacsachovnicu(pole):
             print(' '+j, end='')
         print()
 
-tlacsachovnicu(gensachovnicu(23))
+tlacsachovnicu(gensachovnicu(23))#test cmd
