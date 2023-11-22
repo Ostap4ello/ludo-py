@@ -1,3 +1,8 @@
+PLAYER_NAMES = ("A", "B", "C", "D")
+NUMBER_OF_PLAYERS = 2
+X=0
+Y=1
+
 def gensachovnicu(n): #draw nxn playing field
 
     if n%2 == 0:
@@ -40,4 +45,39 @@ def tlacsachovnicu(pole):
             print(' '+j, end='')
         print()
 
-tlacsachovnicu(gensachovnicu(23))#test cmd
+
+def initialisePlayers(pole, n):
+    #create starting points and directions(first move)
+    center = int(len(pole)/2)
+    startArr = [[[center+1, 1], [center+1, 2]],
+                [[center-1, len(pole)-1], [center-1, len(pole)-2]],
+                [[1, center-1],[2, center-1]],
+                [[len(pole)-1, center+1],[len(pole)-2, center+1]]]
+
+
+    players = []
+    for i in range(n):
+        players.append({
+            'Name': PLAYER_NAMES[i],
+            'ArrMoves': startArr[i],
+            'MoveIndex': 0
+            })
+    
+    return players
+
+def createArrMoves(pole, player) -> list:
+    pass
+        
+
+
+
+
+# #testing
+# board = gensachovnicu(5)
+# tlacsachovnicu(board)#test cmd
+
+# players = initialisePlayers(board, NUMBER_OF_PLAYERS)
+
+# for player in players:
+#     print(player)
+#
