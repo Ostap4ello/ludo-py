@@ -1,8 +1,10 @@
 PLAYER_NAMES = ("A", "B", "C", "D")
 NUMBER_OF_PLAYERS = 2
-X=0
-Y=1
 
+INDEX_X=0
+INDEX_Y=1
+
+#board INIT
 def gensachovnicu(n): #draw nxn playing field
 
     if n%2 == 0:
@@ -45,7 +47,7 @@ def tlacsachovnicu(pole):
             print(' '+j, end='')
         print()
 
-
+#player INIT
 def initialisePlayers(pole, n):
     #create starting points and directions(first move)
     center = int(len(pole)/2)
@@ -54,7 +56,7 @@ def initialisePlayers(pole, n):
                 [[1, center-1],[2, center-1]],
                 [[len(pole)-1, center+1],[len(pole)-2, center+1]]]
 
-
+    #create dicts with data for n players
     players = []
     for i in range(n):
         players.append({
@@ -62,19 +64,53 @@ def initialisePlayers(pole, n):
             'ArrMoves': startArr[i],
             'MoveIndex': 0
             })
-    
+        
+        createArrMoves(pole, players[i])    
+
     return players
 
-def createArrMoves(pole, player) -> list:
-    pass
+def createArrMoves(pole, player): #modify player
+
+    going = True
+    while going:
+        currentpos_X = player['ArrMoves'][len(player['ArrMoves'])-1][INDEX_X]
+        currentpos_Y = player['ArrMoves'][len(player['ArrMoves'])-1][INDEX_Y]
+        lastpos = player['ArrMoves'][len(player['ArrMoves'])-2]
+
+        for dx, dy in [[0,1],[1,0],[-1,0],[0,-1]]:
+            if (currentpos_X+dx in range(1,len(pole))) and (currentpos_Y+dy in range(1,len(pole))):
+                if pole[currentpos_X+dx][currentpos_Y+dy] == '*' and [currentpos_X+dx, currentpos_Y+dy] != lastpos:
+                    if [currentpos_X+dx, currentpos_Y+dy] == player['ArrMoves'][0]:
+                        going = False
+                    else:
+                        player['ArrMoves'].append([currentpos_X+dx, currentpos_Y+dy])
+    
+    going = True
+    while going:
+        currentpos_X = player['ArrMoves'][len(player['ArrMoves'])-1][INDEX_X]
+        currentpos_Y = player['ArrMoves'][len(player['ArrMoves'])-1][INDEX_Y]
+        lastpos = player['ArrMoves'][len(player['ArrMoves'])-2]
+
+        for dx, dy in [[0,1],[1,0],[-1,0],[0,-1]]:
+            if (currentpos_X+dx in range(1,len(pole))) and (currentpos_Y+dy in range(1,len(pole))):
+                if [currentpos_X+dx, currentpos_Y+dy] != lastpos:
+                    if pole[currentpos_X+dx][currentpos_Y+dy] == 'X':
+                        going = False
+                    elif pole[currentpos_X+dx][currentpos_Y+dy] == 'D':
+                        player['ArrMoves'].append([currentpos_X+dx, currentpos_Y+dy])
+    
         
+                
+
+
 
 
 
 
 # #testing
-# board = gensachovnicu(5)
-# tlacsachovnicu(board)#test cmd
+board = gensachovnicu(10)
+tlacsachovnicu(board)#test cmd
+players = initialisePlayers(board, NUMBER_OF_PLAYERS)
 
 # players = initialisePlayers(board, NUMBER_OF_PLAYERS)
 
