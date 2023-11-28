@@ -1,4 +1,7 @@
-PLAYER_NAMES = ("A", "B", "C", "D")
+from random import randint
+
+
+PLAYER_NAMES = ("M", "B", "C", "S")
 NUMBER_OF_PLAYERS = 2
 
 INDEX_X=0
@@ -41,11 +44,16 @@ def gensachovnicu(n): #draw nxn playing field
                 
     return pole
 
-def tlacsachovnicu(pole):
-    for i in pole:
-        for j in i:
-            print(' '+j, end='')
+def tlacsachovnicu(pole, players=[]):
+    for i in range(len(pole)):          #y
+        for j in range(len(pole)):      #x
+            out = pole[j][i]            #[j=x, i=y]
+            for player in players:
+                if player['ArrMoves'][player['MoveIndex']] == [j, i]:   #[j=x, i=y]
+                    out = player['Name']
+            print(' '+out, end='')
         print()
+    print()
 
 #player INIT
 def initialisePlayers(pole, n):
@@ -98,22 +106,42 @@ def createArrMoves(pole, player): #modify player
                         going = False
                     elif pole[currentpos_X+dx][currentpos_Y+dy] == 'D':
                         player['ArrMoves'].append([currentpos_X+dx, currentpos_Y+dy])
-    
+
+    # def move(players, player):
+       
+            
         
                 
 
 
 
+#game setup
+# sizeOfBoard = int(input(''))
+
+gameBoard = gensachovnicu(13)
+tlacsachovnicu(gameBoard)
+
+numberOfPlayers = 4
+
+players = initialisePlayers(gameBoard, numberOfPlayers)
 
 
+#game setup
+playing = True
+playerIndex = 0
+while playing:
 
-# #testing
-board = gensachovnicu(10)
-tlacsachovnicu(board)#test cmd
-players = initialisePlayers(board, NUMBER_OF_PLAYERS)
+    # move(player)
+    m = randint(0,7)
+    players[playerIndex]['MoveIndex'] += m
+    if players[playerIndex]['MoveIndex'] >= len(players[playerIndex]["ArrMoves"]):
+        players[playerIndex]['MoveIndex'] = len(players[playerIndex]["ArrMoves"]) - 1
+        playing = False
+    elif m != 6:
+        playerIndex += 1
+        if playerIndex >= len(players):
+            playerIndex = 0
+         
+    tlacsachovnicu(gameBoard, players)
 
-# players = initialisePlayers(board, NUMBER_OF_PLAYERS)
-
-# for player in players:
-#     print(player)
-#
+print('end')
