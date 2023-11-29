@@ -1,58 +1,61 @@
 from random import randint
 
 
-PLAYER_NAMES = ("M", "B", "C", "S")
-NUMBER_OF_PLAYERS = 2
+PLAYER_NAMES = ("A", "B", "C", "S")
 
 INDEX_X=0
 INDEX_Y=1
 
 #board INIT
-def gensachovnicu(n): #draw nxn playing field
+def gensachovnicu(n): #generate nxn playing field (y,x)
 
     if n%2 == 0:
         n+=1
     pole = []
     center = int(n/2) 
 
-    for i in range(-1, n):
+    for x in range(-1, n):
 
         pole.append([])
         
-        for j in range(-1, n):
-            if i == -1 and j == -1:
+        for y in range(-1, n):
+
+            if x == -1 and y == -1:     #border draw
                 insert = ' '
-            elif i == -1:
-                insert = str(j%10)
-            elif j == -1:
-                insert = str(i%10)
-            elif abs(center-i)<=1 or abs(center-j)<=1:
-                if i==0 or j==0 or j==n-1 or i==n-1:
+            elif x == -1:
+                insert = str(y%10)
+            elif y == -1:
+                insert = str(x%10)
+            
+            elif abs(center-x)<=1 or abs(center-y)<=1: #cross draw
+                if x==0 or y==0 or y==n-1 or x==n-1:
                     insert ='*'
-                elif i==center and j==center:
+                elif x==center and y==center:
                     insert = 'X'
-                elif i==center or j==center:
+                elif x==center or y==center:
                     insert = 'D'
                 else:
                     insert = '*'
             else:
                 insert=' '
             
-            pole[i+1].append(insert)
-            #print(' %s' % insert, end='')
-        #print()
-                
+            pole[x+1].append(insert)
+
     return pole
 
+
 def tlacsachovnicu(pole, players=[]):
-    for i in range(len(pole)):          #y
-        for j in range(len(pole)):      #x
-            out = pole[j][i]            #[j=x, i=y]
+    for y in range(len(pole)):          #y
+        for x in range(len(pole)):      #x
+            out = ''            #[y, x] for board
             for player in players:
-                if player['ArrMoves'][player['MoveIndex']] == [j, i]:   #[j=x, i=y]
-                    out = player['Name']
+                if player['ArrMoves'][player['MoveIndex']] == [x, y]:   #[]
+                    out += player['Name']
+            if out == '':
+                out = pole[y][x]
             print(' '+out, end='')
         print()
+
     print()
 
 #player INIT
@@ -72,8 +75,7 @@ def initialisePlayers(pole, n):
             'ArrMoves': startArr[i],
             'MoveIndex': 0
             })
-        
-        createArrMoves(pole, players[i])    
+        createArrMoves(pole, players[i])    #create array of allowed moves for each player
 
     return players
 
@@ -107,32 +109,47 @@ def createArrMoves(pole, player): #modify player
                     elif pole[currentpos_X+dx][currentpos_Y+dy] == 'D':
                         player['ArrMoves'].append([currentpos_X+dx, currentpos_Y+dy])
 
-    # def move(players, player):
-       
-            
-        
-                
 
+#game startup
 
+while True: #board size input
+    try:
+        sizeOfBoard = int(input('Size of Gameboard to be simulated: '))
+    except:
+        print('Please write a number!')
+    else:
+        if sizeOfBoard >= 4:
+            break
+        else:
+            print('Please write a number bigger than 4')
 
-#game setup
-# sizeOfBoard = int(input(''))
+while True: #player count input
+    try:
+        numberOfPlayers = int(input('Number of players should be simulated: '))
+    except:
+        print('Please write a number!')
+    else:
+        if numberOfPlayers in range(1, 5):
+            break
+        else:
+            print('Please write a number between 0 and 5')
 
-gameBoard = gensachovnicu(13)
+print()
+
+gameBoard = gensachovnicu(sizeOfBoard)
 tlacsachovnicu(gameBoard)
-
-numberOfPlayers = 4
 
 players = initialisePlayers(gameBoard, numberOfPlayers)
 
+tlacsachovnicu(gameBoard, players)
 
-#game setup
 playing = True
 playerIndex = 0
 while playing:
 
     # move(player)
     m = randint(0,7)
+    print('Move: Player %s +%d steps' % (players[playerIndex]['Name'], m))
     players[playerIndex]['MoveIndex'] += m
     if players[playerIndex]['MoveIndex'] >= len(players[playerIndex]["ArrMoves"]):
         players[playerIndex]['MoveIndex'] = len(players[playerIndex]["ArrMoves"]) - 1
@@ -144,4 +161,6 @@ while playing:
          
     tlacsachovnicu(gameBoard, players)
 
-print('end')
+print('Player %s Won!' % players[playerIndex]['Name'])
+print('End!')
+print()
