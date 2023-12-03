@@ -121,57 +121,65 @@ def createArrMoves(pole, player): #modify player
                         player['ArrMoves'].append([currentpos_X+dx, currentpos_Y+dy])
 
 
+
 #game startup
 
-while True: #board size input
-    try:
-        sizeOfBoard = int(input('Size of Gameboard to be simulated: '))
-    except:
-        print('Please write a number!')
-    else:
-        if sizeOfBoard >= 4:
-            break
+def main():
+
+    while True: #board size input
+        try:
+            sizeOfBoard = int(input('Size of Gameboard to be simulated: '))
+        except:
+            print('Please write a number!')
         else:
-            print('Please write a number bigger than 4')
+            if sizeOfBoard >= 4:
+                break
+            else:
+                print('Please write a number bigger than 4')
 
-while True: #player count input
-    try:
-        numberOfPlayers = int(input('Number of players should be simulated: '))
-    except:
-        print('Please write a number!')
-    else:
-        if numberOfPlayers in range(1, 5):
-            break
+    while True: #player count input
+        try:
+            numberOfPlayers = int(input('Number of players should be simulated: '))
+        except:
+            print('Please write a number!')
         else:
-            print('Please write a number between 0 and 5')
+            if numberOfPlayers in range(1, 5):
+                break
+            else:
+                print('Please write a number between 0 and 5')
 
-print()
+    print()
 
-gameBoard = gensachovnicu(sizeOfBoard)
-tlacsachovnicu(gameBoard)
+    gameBoard = gensachovnicu(sizeOfBoard)
+    tlacsachovnicu(gameBoard)
 
-players = initialisePlayers(gameBoard, numberOfPlayers)
+    players = initialisePlayers(gameBoard, numberOfPlayers)
 
-tlacsachovnicu(gameBoard, players)
-
-playing = True
-playerIndex = 0
-while playing:
-
-    # move(player)
-    m = randint(0,7)
-    print('Move: Player %s +%d steps' % (players[playerIndex]['Name'], m))
-    players[playerIndex]['MoveIndex'] += m
-    if players[playerIndex]['MoveIndex'] >= len(players[playerIndex]["ArrMoves"]):
-        players[playerIndex]['MoveIndex'] = len(players[playerIndex]["ArrMoves"]) - 1
-        playing = False
-    elif m != 6:
-        playerIndex += 1
-        if playerIndex >= len(players):
-            playerIndex = 0
-         
     tlacsachovnicu(gameBoard, players)
 
-print('Player %s Won!' % players[playerIndex]['Name'])
-print('End!')
-print()
+    playing = True
+
+    playerTurn = 0 #which player draws cube
+    while playing:
+
+        # move(player)
+        m = randint(0,7)
+        print('Move: Player %s +%d steps' % (players[playerTurn]['Name'], m))
+        players[playerTurn]['MoveIndex'] += m
+        if players[playerTurn]['MoveIndex'] >= len(players[playerTurn]["ArrMoves"]):
+            players[playerTurn]['MoveIndex'] = len(players[playerTurn]["ArrMoves"]) - 1
+            playing = False
+        elif m != 6:
+            playerTurn += 1
+            if playerTurn >= len(players):
+                playerTurn = 0
+
+        tlacsachovnicu(gameBoard, players)
+
+    print('Player %s Won!' % players[playerTurn]['Name'])
+    print('End!')
+    print()
+
+
+
+main()    
