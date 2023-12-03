@@ -11,7 +11,9 @@ def gensachovnicu(n): #generate nxn playing field (y,x)
 
     if n%2 == 0:
         n+=1
-        print('Board must have odd length, so board %sx%s will be used instead' % (n,n))
+        print('Board must have odd length, so board %sx%s will be used instead. [press Enter to continue]' % (n,n))
+        input()
+
     pole = []
     center = int(n/2) 
 
@@ -83,8 +85,10 @@ def initialisePlayers(pole, n):
     for i in range(n):
         players.append({
             'Name': PLAYER_NAMES[i],
+            'isOnBoard': True,
+            'MoveIndex': 0,
+            'PlayerCount': (len(pole)-1)/2,
             'ArrMoves': startArr[i],
-            'MoveIndex': 0
             })
         createArrMoves(pole, players[i])    #create array of allowed moves for each player
 
@@ -121,7 +125,6 @@ def createArrMoves(pole, player): #modify player
                         player['ArrMoves'].append([currentpos_X+dx, currentpos_Y+dy])
 
 
-
 #game startup
 
 def main():
@@ -150,6 +153,7 @@ def main():
 
     print()
 
+    #Players and board initialisation
     gameBoard = gensachovnicu(sizeOfBoard)
     tlacsachovnicu(gameBoard)
 
@@ -157,22 +161,31 @@ def main():
 
     tlacsachovnicu(gameBoard, players)
 
+    #Main Cycle
     playing = True
 
-    playerTurn = 0 #which player draws cube
+    playerTurn = 0 #which player draws cube    
     while playing:
+        player = players[playerTurn]
 
-        # move(player)
-        m = randint(0,7)
-        print('Move: Player %s +%d steps' % (players[playerTurn]['Name'], m))
-        players[playerTurn]['MoveIndex'] += m
-        if players[playerTurn]['MoveIndex'] >= len(players[playerTurn]["ArrMoves"]):
-            players[playerTurn]['MoveIndex'] = len(players[playerTurn]["ArrMoves"]) - 1
+        
+
+
+        if player['isOnBoard'] == False:
+            pass #draw cube untill get 6, else skip move
+        elif player['MoveIndex'] == len(player["ArrMoves"]) - 1:
             playing = False
-        elif m != 6:
-            playerTurn += 1
-            if playerTurn >= len(players):
-                playerTurn = 0
+        else:
+            m = randint(0,7)
+            # move(player)
+            print('Move: Player %s +%d steps' % (players[playerTurn]['Name'], m))
+            players[playerTurn]['MoveIndex'] += m
+            if players[playerTurn]['MoveIndex'] >= len(players[playerTurn]["ArrMoves"]):
+                players[playerTurn]['MoveIndex'] = len(players[playerTurn]["ArrMoves"]) - 1
+            elif m != 6:
+                playerTurn += 1
+                if playerTurn >= len(players):
+                    playerTurn = 0
 
         tlacsachovnicu(gameBoard, players)
 
@@ -182,4 +195,6 @@ def main():
 
 
 
+
+#haha that's all the game
 main()    
