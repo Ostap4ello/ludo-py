@@ -1,13 +1,12 @@
 from random import randint
 
-
 PLAYER_NAMES = ("A", "B", "C", "S")
 
 INDEX_X=0
 INDEX_Y=1
 
 #board INIT
-def gensachovnicu(n): #generate nxn playing field (y,x)
+def gensachovnicu(n): #generate nxn playing field (y,x) - axis
 
     if n%2 == 0:
         n+=1
@@ -41,24 +40,25 @@ def gensachovnicu(n): #generate nxn playing field (y,x)
 
 
 def tlacsachovnicu(pole, players=[]):
-
+    
     n = len(pole)
     
-    print() #top margin
+    print() #top margin before printing
+
     for y in range(-1, n):        
         for x in range(-1, n):
 
-            if x == -1 and y == -1: #draw borders-coords    
+            if x == -1 and y == -1: #draw coordinates
                 insert = ' '
             elif x == -1:
                 insert = str(y%10)
             elif y == -1:
                 insert = str(x%10)
             
-            else:
+            else:                   #draw board
                 insert = ''            
                 
-                for player in players:
+                for player in players:  #if x,y are coords of any player -> draw player
                     if player['IsOnBoard']:
                         if player['MovesArray'][player['MoveIndex']] == [x, y]:   #[]
                             insert += player['Name']
@@ -69,6 +69,7 @@ def tlacsachovnicu(pole, players=[]):
             print(' '+insert, end='')
         
         print()
+
     print() #bottom margin
 
 
@@ -95,40 +96,47 @@ def initialisePlayers(pole, n):
 
     return players
 
-def createMovesArray(pole, player): #modify player
+def createMovesArray(pole, player): #create array that contains sequence of coordinates, which will be followed by player
 
-    going = True
+    going = True    #detecting all '*', until the 'D'
     while going:
-        currentpos_X = player['MovesArray'][len(player['MovesArray'])-1][INDEX_X]
-        currentpos_Y = player['MovesArray'][len(player['MovesArray'])-1][INDEX_Y]
-        lastpos = player['MovesArray'][len(player['MovesArray'])-2]
+        currentPosition_X = player['MovesArray'][len(player['MovesArray'])-1][INDEX_X]
+        currentPosition_Y = player['MovesArray'][len(player['MovesArray'])-1][INDEX_Y]
+        lastPosition = player['MovesArray'][len(player['MovesArray'])-2]
 
-        for dx, dy in [[0,1],[1,0],[-1,0],[0,-1]]:
-            if (currentpos_X+dx in range(len(pole))) and (currentpos_Y+dy in range(len(pole))):
-                if pole[currentpos_X+dx][currentpos_Y+dy] == '*' and [currentpos_X+dx, currentpos_Y+dy] != lastpos:
-                    if [currentpos_X+dx, currentpos_Y+dy] == player['MovesArray'][0]:
+        for dx, dy in [[0,1],[1,0],[-1,0],[0,-1]]:  #check for '*' in each direction except for last position and outer positions
+            checkPosition_X = currentPosition_X + dx
+            checkPosition_Y = currentPosition_Y + dy
+            
+            if (checkPosition_X in range(len(pole))) and (checkPosition_Y in range(len(pole))):
+                if pole[checkPosition_X][checkPosition_Y] == '*' and [checkPosition_X, checkPosition_Y] != lastPosition:
+                    if [checkPosition_X, checkPosition_Y] == player['MovesArray'][0]: #finish, when next pos is start, which means that 'D's should be scanned now
                         going = False
                     else:
-                        player['MovesArray'].append([currentpos_X+dx, currentpos_Y+dy])
+                        player['MovesArray'].append([checkPosition_X, checkPosition_Y])
     
     going = True
-    while going:
-        currentpos_X = player['MovesArray'][len(player['MovesArray'])-1][INDEX_X]
-        currentpos_Y = player['MovesArray'][len(player['MovesArray'])-1][INDEX_Y]
-        lastpos = player['MovesArray'][len(player['MovesArray'])-2]
+    while going:      #detecting all '*', until the 'D'
+        currentPosition_X = player['MovesArray'][len(player['MovesArray'])-1][INDEX_X]
+        currentPosition_Y = player['MovesArray'][len(player['MovesArray'])-1][INDEX_Y]
+        lastPosition = player['MovesArray'][len(player['MovesArray'])-2]
 
-        for dx, dy in [[0,1],[1,0],[-1,0],[0,-1]]:
-            if (currentpos_X+dx in range(len(pole))) and (currentpos_Y+dy in range(len(pole))):
-                if [currentpos_X+dx, currentpos_Y+dy] != lastpos:
-                    if pole[currentpos_X+dx][currentpos_Y+dy] == 'X':
+        for dx, dy in [[0,1],[1,0],[-1,0],[0,-1]]: #check for 'D' in each direction except for last position and outer positions
+            checkPosition_X = currentPosition_X + dx
+            checkPosition_Y = currentPosition_Y + dy
+            
+            if (checkPosition_X in range(len(pole))) and (checkPosition_Y in range(len(pole))):
+                if [checkPosition_X, checkPosition_Y] != lastPosition:
+                    if pole[checkPosition_X][checkPosition_Y] == 'X':  #finish, when next pos is 'X', which means the end of array
                         going = False
-                    elif pole[currentpos_X+dx][currentpos_Y+dy] == 'D':
-                        player['MovesArray'].append([currentpos_X+dx, currentpos_Y+dy])
+                    elif pole[checkPosition_X][checkPosition_Y] == 'D':
+                        player['MovesArray'].append([checkPosition_X, checkPosition_Y])
 
 
 #game startup
 
-def main():
+def main(): #MAIN BODY
+
     print()
 
     while True: #board size input
@@ -155,38 +163,42 @@ def main():
 
     print()
 
-    #Players and board initialisation
+    #players and board initialisation
     gameBoard = gensachovnicu(sizeOfBoard)
 
     players = initialisePlayers(gameBoard, numberOfPlayers)
 
-    #Main Cycle
+    #MAIN CYCLE
     print('--- Game starns NOW! ---')
     playing = True
 
-    playerTurn = 0 #which player draws cube    
+    playerTurn = 0 #start from first player in the list   
     while playing:
         input('[press Enter to continue]')
         print()
 
         player = players[playerTurn]
 
-        m = randint(1,6)
+        diceValue = randint(1,6)
 
         if player['IsOnBoard']:
             # move(player)
-            print('Move: Player %s +%d steps' % (player['Name'], m))
-            player['MoveIndex'] += m
+            print('Move: Player %s +%d steps' % (player['Name'], diceValue))
+            player['MoveIndex'] += diceValue
 
             if player['MoveIndex'] >= len(player["MovesArray"]) - 1: #player finishes his way
-                
                 player['MoveIndex'] = len(player["MovesArray"]) - 1
-                if player['PlayerCount'] == 0:
-                    playing = False
+                
+                if player['PlayerCount'] == 0: 
+                    playing = False     #end of game
+                    print('Player %s Won!' % player['Name'])
+                    print('----- End! -----')
+                    print()
+
                 else:
-                    player['IsOnBoard'] = False
+                    player['IsOnBoard'] = False             #prepare for next iterration
                     lastCoord = player['MovesArray'].pop(player['MoveIndex'])
-                    gameBoard[lastCoord[1]][lastCoord[0]] = player['Name']
+                    gameBoard[lastCoord[1]][lastCoord[0]] = player['Name'] #draw player permanently
 
                     player['MoveIndex'] = 0
 
@@ -195,27 +207,22 @@ def main():
         else:
 
             print('Player %s rolls a dice in order to get on the board' % (player['Name']))
-            if m == 6:
-                print('%s - player %s goes on board' % (m, player['Name']))
+            if diceValue == 6:
+                print('%s - player %s goes on board' % (diceValue, player['Name']))
                 player['IsOnBoard'] = True
                 player['PlayerCount'] -= 1
             else:
-                print('%s - what a mess, player %s waits' % (m, player['Name']))
+                print('%s - what a mess, player %s waits' % (diceValue, player['Name']))
             #draw cube untill get 6, else skip move
         
-        if m != 6 and playing:
+        if diceValue != 6:      #change player turn to next? except when dice was 6 and game is still on
             playerTurn += 1
             if playerTurn >= len(players):
                 playerTurn = 0
 
         tlacsachovnicu(gameBoard, players)
 
-
-    print('Player %s Won!' % player['Name'])
-    print('----- End! -----')
-    print()
-
-
+        #end of MAIN BODY
 
 
 #haha that's all the game
