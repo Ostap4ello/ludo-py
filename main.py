@@ -1,9 +1,24 @@
 from random import randint
+from os import system, name
 
 PLAYER_NAMES = ("A", "B", "C", "S")
 
 INDEX_X=0
 INDEX_Y=1
+
+
+
+ 
+# define our clear function
+def clearScreen():
+ 
+    # for windows
+    if name == 'nt':
+        a = system('cls')
+ 
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        a = system('clear')
 
 #board INIT
 def gensachovnicu(n): #generate nxn playing field (y,x) - axis
@@ -109,7 +124,7 @@ def createMovesArray(pole, player): #create array that contains sequence of coor
             checkPosition_Y = currentPosition_Y + dy
             
             if (checkPosition_X in range(len(pole))) and (checkPosition_Y in range(len(pole))):
-                if pole[checkPosition_X][checkPosition_Y] == '*' and [checkPosition_X, checkPosition_Y] != lastPosition:
+                if pole[checkPosition_Y][checkPosition_X] == '*' and [checkPosition_X, checkPosition_Y] != lastPosition:
                     if [checkPosition_X, checkPosition_Y] == player['MovesArray'][0]: #finish, when next pos is start, which means that 'D's should be scanned now
                         going = False
                     else:
@@ -127,9 +142,9 @@ def createMovesArray(pole, player): #create array that contains sequence of coor
             
             if (checkPosition_X in range(len(pole))) and (checkPosition_Y in range(len(pole))):
                 if [checkPosition_X, checkPosition_Y] != lastPosition:
-                    if pole[checkPosition_X][checkPosition_Y] == 'X':  #finish, when next pos is 'X', which means the end of array
+                    if pole[checkPosition_Y][checkPosition_X] == 'X':  #finish, when next pos is 'X', which means the end of array
                         going = False
-                    elif pole[checkPosition_X][checkPosition_Y] == 'D':
+                    elif pole[checkPosition_Y][checkPosition_X] == 'D':
                         player['MovesArray'].append([checkPosition_X, checkPosition_Y])
 
 
@@ -148,7 +163,7 @@ def main(): #MAIN BODY
             if sizeOfBoard >= 4:
                 break
             else:
-                print('Please write a number bigger than 4')
+                print('Please write a number bigger than 4!')
 
     while True: #player count input
         try:
@@ -159,7 +174,7 @@ def main(): #MAIN BODY
             if numberOfPlayers in range(1, 5):
                 break
             else:
-                print('Please write a number between 0 and 5')
+                print('Please write a number between 0 and 5!')
 
     print()
 
@@ -171,10 +186,17 @@ def main(): #MAIN BODY
     #MAIN CYCLE
     print('--- Game starns NOW! ---')
     playing = True
+    input('[press Enter to start]')
 
     playerTurn = 0 #start from first player in the list   
     while playing:
-        input('[press Enter to continue]')
+
+        clearScreen()
+
+        #header
+        print()
+        print('----- LUDO: Človeče nehnevaj sa -----')
+        print('by ostap4ello__')
         print()
 
         player = players[playerTurn]
@@ -183,7 +205,9 @@ def main(): #MAIN BODY
 
         if player['IsOnBoard']:
             # move(player)
-            print('Move: Player %s +%d steps' % (player['Name'], diceValue))
+
+            print('Roll a dice!')
+            print('Player %s moves by %d steps!' % (player['Name'], diceValue))
             player['MoveIndex'] += diceValue
 
             if player['MoveIndex'] >= len(player["MovesArray"]) - 1: #player finishes his way
@@ -191,9 +215,6 @@ def main(): #MAIN BODY
                 
                 if player['PlayerCount'] == 0: 
                     playing = False     #end of game
-                    print('Player %s Won!' % player['Name'])
-                    print('----- End! -----')
-                    print()
 
                 else:
                     player['IsOnBoard'] = False             #prepare for next iterration
@@ -202,27 +223,36 @@ def main(): #MAIN BODY
 
                     player['MoveIndex'] = 0
 
-                    print('Player %s will go to next figure' % player['Name'])
+                    print('Player %s will go to next figure...' % player['Name'], end = '')
         
         else:
 
-            print('Player %s rolls a dice in order to get on the board' % (player['Name']))
+            print('Player %s rolls a dice in order to get on the board...' % (player['Name']))
             if diceValue == 6:
-                print('%s - player %s goes on board' % (diceValue, player['Name']))
+                print('%s - Player %s goes on board!' % (diceValue, player['Name']))
                 player['IsOnBoard'] = True
                 player['PlayerCount'] -= 1
             else:
-                print('%s - what a mess, player %s waits' % (diceValue, player['Name']))
+                print('%s - What a mess, player %s waits...' % (diceValue, player['Name']))
             #draw cube untill get 6, else skip move
         
-        if diceValue != 6:      #change player turn to next? except when dice was 6 and game is still on
+        if diceValue != 6 and playing:      #change player turn to next? except when dice was 6 and game is still on
             playerTurn += 1
             if playerTurn >= len(players):
                 playerTurn = 0
-
+        
+        
         tlacsachovnicu(gameBoard, players)
+        if playing: input('-----------[press Enter]-------------')
 
-        #end of MAIN BODY
+        #end of MAIN CYCLE
+
+
+    print('Player %s Won!' % player['Name'])
+    print('-------------- The End ---------------')
+    print()
+    
+    #end of MAIN BODY
 
 
 #haha that's all the game
