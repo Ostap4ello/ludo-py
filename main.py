@@ -256,7 +256,7 @@ def main(): #MAIN BODY
                 player['IsOnBoard'] = True
                 player['PlayerCount'] -= 1
             else:
-                print('%s - What a mess, player %s waits...' % (diceValue, player['Name']))
+                print('%s - Sadly, but player %s waits...' % (diceValue, player['Name']))
             #draw cube untill get 6, else skip move
         
         if diceValue != 6 and playing:      #change player turn to next? except when dice was 6 and game is still on
