@@ -24,20 +24,14 @@ INDEX_X=0
 INDEX_Y=1
 
 
-
- 
-# define our clear function
-def clearScreen():
- 
-    # for windows
-    if name == 'nt':
-        system('cls')
- 
-    # for mac and linux(here, os.name is 'posix')
-    else:
+def clearScreen(): #clear screen function (as part of update)
+    
+    if name == 'nt': #for Windows
+        system('cls')   
+    else: #for Mac and Linux('posix')
         system('clear')
 
-#board INIT
+#board Initialisation
 def gensachovnicu(n): #generate nxn playing field (y,x) - axis
 
     if n%2 == 0:
