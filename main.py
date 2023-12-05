@@ -168,8 +168,14 @@ def createMovesArray(pole, player): #create array that contains sequence of coor
 #game startup
 
 def main(): #MAIN BODY
-
+    
+    #header
+    clearScreen()
     print()
+    print('----- LUDO: Človeče nehnevaj sa -----')
+    print('by ostap4ello__')
+    print()
+    print('Setup:')
 
     while True: #board size input
         try:
@@ -201,9 +207,9 @@ def main(): #MAIN BODY
     players = initialisePlayers(gameBoard, numberOfPlayers)
 
     #MAIN CYCLE
-    print('--- Game starns NOW! ---')
-    playing = True
+    print('---------- Game starns NOW! ----------')
     input('[press Enter to start]')
+    playing = True
 
     playerTurn = 0 #start from first player in the list   
     while playing:
@@ -260,7 +266,9 @@ def main(): #MAIN BODY
         
         
         tlacsachovnicu(gameBoard, players)
-        if playing: input('-----------[press Enter]-------------')
+        if playing: 
+            print('-----------[press Enter]-------------')
+            input()
 
         #end of MAIN CYCLE
 
