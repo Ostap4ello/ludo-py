@@ -31,11 +31,11 @@ def clearScreen():
  
     # for windows
     if name == 'nt':
-        a = system('cls')
+        system('cls')
  
     # for mac and linux(here, os.name is 'posix')
     else:
-        a = system('clear')
+        system('clear')
 
 #board INIT
 def gensachovnicu(n): #generate nxn playing field (y,x) - axis
