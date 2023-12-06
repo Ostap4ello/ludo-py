@@ -10,7 +10,7 @@
 #
 # Differences or Points:
 # 1. Next figure of player goes on board only after previous finishes (so each player have max. 1 figure on the board)
-# 2. When two players are on the same field, they are displayed, as both of letters (for example, when 'A' meets 'B', they are shown as 'AB')
+# 2. When two or more players are on the same field, they are displayed as number (for example, when 3 players meet, they are shown as 3)
 # => Rules with 'blocking the field' and 'meeting on one field' are not implemented
 #  
 #  ... end of readme.md
@@ -29,7 +29,7 @@ def main():
     clearScreen()
     print()
     print('----- LUDO: Človeče nehnevaj sa -----')
-    print('by ostap4ello__')
+    print('by Ostap Pelekh')
     print()
     print('Setup:')
 
@@ -67,6 +67,7 @@ def main():
     playing = True
 
     playerTurn = 0 #start from first player in the list   
+    turnInRowCount = 1
     while playing:
 
         clearScreen() #update GAME FRAME
@@ -74,7 +75,7 @@ def main():
         #header
         print()
         print('----- LUDO: Človeče nehnevaj sa -----')
-        print('by ostap4ello__')
+        print('by Ostap Pelekh')
         print()
 
         player = players[playerTurn]
@@ -114,10 +115,13 @@ def main():
                 print('%s - Sadly, but player %s waits...' % (diceValue, player['Name']))
             #draw cube untill get 6, else skip move
         
-        if diceValue != 6 and playing:      #change player turn to next? except when dice was 6 and game is still on
+        if (diceValue != 6 or turnInRowCount == 3) and playing:      #change player turn to next (when 3-turns-in-row or dice is not 6)
+            turnInRowCount = 1
             playerTurn += 1
             if playerTurn >= len(players):
                 playerTurn = 0
+        else: #when 6 on dice
+            turnInRowCount += 1
         
         
         tlacsachovnicu(gameBoard, players)
@@ -131,6 +135,8 @@ def main():
             print()
 
     #end of MAIN CYCLE
+
+
 
 #FUNCTIONS/LIB
 
@@ -201,8 +207,10 @@ def tlacsachovnicu(board, players=[]): #display nxn playing field (board)
                 
                 if insert == '':
                     insert = board[y][x]
+                if len(insert) > 1:
+                    insert = len(insert)
 
-            print(' '+insert, end='')
+            print('%2s'  % insert, end='')
         
         print()
 

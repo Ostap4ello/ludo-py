@@ -9,5 +9,5 @@ After that it shows step-by-step simulation of game.
 
 # Differences:
 1. Next figure of player goes on board only after previous finishes (so each player have max. 1 figure on the board)
-2. When two players are on the same field, they are displayed, as both of letters (for example, when 'A' meets 'B', they are shown as 'AB')
+2. When two or more players are on the same field, they are displayed as number (for example, when 3 players meet, they are shown as 3)
 => Rules with 'blocking the field' and 'meeting on one field' are not implemented
