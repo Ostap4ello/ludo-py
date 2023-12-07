@@ -3,6 +3,8 @@
 # LUDO - Človeče nehnevaj sa 
 # by Ostap Pelekh, 1bc., API7
 # 
+# Game covers all 3 points of the project assignment.
+#
 # Program simulates The LUDO game.
 # It begins with two prompts that ask you about size of board and number of players.
 # After that it shows step-by-step simulation of game.
