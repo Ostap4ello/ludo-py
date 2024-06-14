@@ -2,7 +2,7 @@
 # LUDO - Človeče nehnevaj sa
 by Ostap Pelekh, 1bc., API7
 
-###Program simulates The LUDO game.
+### Program simulates The LUDO game.
 It begins with two prompts requiring you to enter board size and number of players.
 After that the game is simulated step-by-step.
 
