@@ -14,6 +14,6 @@ After that the game is simulated step-by-step.
 ## How-to:
 1. Download the repo.
 2. cd to this repo and run:
-,,,
+```
 make
-,,,
+```
